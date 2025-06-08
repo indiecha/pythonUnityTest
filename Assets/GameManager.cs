@@ -28,6 +28,8 @@ public class GameManager : Singleton<GameManager>
 
         PluginInstance?.Call("showToast", "!!!TEST!!!");
 
+
+
         //bytes = PluginInstance?.Get<byte[]>("tex_bytes");
     }
 }

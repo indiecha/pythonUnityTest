@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,17 +13,30 @@ public class DisplayImage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Bytes2TexTest();
+        using (AndroidJavaClass pluginClass = new AndroidJavaClass("com.example.unitymodule.unityModule"))
+        {
+            var unityModule = pluginClass.CallStatic<AndroidJavaObject>("instance");
 
-        DisplayImage di = new DisplayImage();
-        di.Bytes2Tex(GameManager.Instance.PluginInstance.Get<byte[]>("tex_bytes"));
+            Debug.Log($"unityModule: {unityModule}");
+
+            //launcher = pluginClass.CallStatic<AndroidJavaObject>("getInstance", context);
+            byte[] bytes = unityModule.Call<byte[]>("getIcon", 0);
+            Debug.Log($"bytes: {bytes}");
+
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(bytes);
+            //texture.GetComponent<Renderer>().material.mainTexture = tex;
+            //texture = tex;
+            GetComponent<RawImage>().texture = tex;
+        }
+
+
+        //Bytes2TexTest();
+
+        //DisplayImage di = new DisplayImage();
+        //Bytes2Tex(GameManager.Instance?.PluginInstance?.Get<byte[]>("tex_bytes"));
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Set_Webcam_Image(byte[] recevByteArr)
     {
